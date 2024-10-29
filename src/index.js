@@ -110,10 +110,7 @@ function renderResults(location, results) {
   );
 
   renderIntoResultsContent(resultsContainer);
-  const container = document.querySelector(".results");
-  if (container) {
-    container.classList.remove("hidden");
-  }
+
 }
 /**
  * Birta villu í viðmóti.
@@ -141,6 +138,10 @@ function renderLoading() {
 async function onSearch(location) {
   console.log("onSearch", location);
 
+  const container = document.querySelector(".results");
+  if (container) {
+    container.classList.remove("hidden");
+  }
   // Birta loading state
   renderLoading();
 
@@ -189,10 +190,6 @@ async function onSearchMyLocation() {
         `Please make sure you allow location sharing for this website, ${error.message}`,
       ),
     );
-    const container = document.querySelector(".results");
-    if (container) {
-      container.classList.remove("hidden");
-    }
   }
 }
 
