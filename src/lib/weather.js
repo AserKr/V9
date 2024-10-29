@@ -1,4 +1,4 @@
-const API_URL = 'https://api.open-meteo.com/v1/forecast';
+const API_URL = "https://api.open-meteo.com/v1/forecast";
 
 async function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -17,7 +17,30 @@ async function sleep(ms) {
  * @returns {Array<Forecast>}
  */
 function parseResponse(data) {
-  return data;
+  if (!data || !data.hourly || !data.hourly.time) {
+    return [];
+  }
+
+  const hours = data.hourly.time;
+  const temp = data.hourly.temperature_2m;
+  const precip = data.hourly.precipitation || [];
+
+  const forecasts = hours.map((time, index) => {
+    const date = new Date(time);
+    const formattedTime = date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+
+    return {
+      time: formattedTime,
+      temperature: temp[index],
+      precipitation: precip[index] || 0,
+    };
+  });
+
+  return forecasts;
 }
 
 /**
@@ -37,8 +60,8 @@ export async function weatherSearch(lat, lng) {
   const querystring = new URLSearchParams({
     latitude: lat.toString(),
     longitude: lng.toString(),
-    hourly: 'temperature_2m,precipitation',
-    forecast_days: '1',
+    hourly: "temperature_2m,precipitation",
+    forecast_days: "1",
   });
   url.search = querystring.toString();
 
