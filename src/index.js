@@ -51,9 +51,11 @@ const locations = [
  */
 function renderIntoResultsContent(element) {
   const resultsContainer = document.querySelector(".results");
+  const resultsHeader = el("h2", { class: "results__header" }, `Results `);
 
   if (resultsContainer) {
     empty(resultsContainer);
+    resultsContainer.appendChild(resultsHeader)
     resultsContainer.appendChild(element);
   }
 }
@@ -64,8 +66,6 @@ function renderIntoResultsContent(element) {
  * @param {Array<import('./lib/weather.js').Forecast>} results
  */
 function renderResults(location, results) {
-  const resultsHeader = el("h2", { class: "results__header" }, `Results `);
-
   const resultsParagr = el(
     "p",
     { class: "results__text" },
@@ -104,7 +104,6 @@ function renderResults(location, results) {
   const resultsContainer = el(
     "div",
     { class: "results" },
-    resultsHeader,
     resultsParagr,
     table,
   );
@@ -144,6 +143,7 @@ async function onSearch(location) {
   }
   // Birta loading state
   renderLoading();
+
 
   try {
     const results = await weatherSearch(location.lat, location.lng);
@@ -277,25 +277,6 @@ function render(container, locations, onSearch, onSearchMyLocation) {
   // útfæra niðurstöðu element
   const resultsContainer = document.createElement("div");
   resultsContainer.classList.add("results", "hidden");
-
-  const resultsHeader = document.createElement("h2");
-  resultsHeader.classList.add("results__header");
-  resultsHeader.textContent = "Results";
-  resultsContainer.appendChild(resultsHeader);
-
-  const table = document.createElement("table");
-  table.classList.add("forecast");
-  const thead = document.createElement("thead");
-  const headerRow = document.createElement("tr");
-  ["Time", "Temperature (°C)", "Precipitation (mm)"].forEach((text) => {
-    const th = document.createElement("th");
-    th.textContent = text;
-    headerRow.appendChild(th);
-  });
-  thead.appendChild(headerRow);
-  table.appendChild(thead);
-  table.appendChild(document.createElement("tbody"));
-  resultsContainer.appendChild(table);
 
   parentElement.appendChild(resultsContainer);
 
